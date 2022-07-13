@@ -50,7 +50,8 @@ export default {
     this.axios
       .post(url, params, this.serverPass + "login")
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
+        this.$store.commit("setAttendanceInfo", response.data);
       })
       .catch((error) => {
         console.log(error);

@@ -1,5 +1,6 @@
 import Vuex from "vuex";
 import vuexPersistedState from 'vuex-persistedstate'
+import Vue from 'vue'
 Vue.use(Vuex);
 
 function getDefaultState() {

@@ -7,6 +7,9 @@
     <div class="content">
       <router-link to="/changeByCase">changeByCase</router-link>
     </div>
+    <div class="content">
+      <router-link to="/attendance">勤怠ボタン</router-link>
+    </div>
   </div>
 </template>
 

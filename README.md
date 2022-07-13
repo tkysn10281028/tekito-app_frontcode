@@ -18,7 +18,7 @@ npm install --save axios vue-axios
 
 ### Vuex
 ```
-npm install --save-dev vuex
+npm install --save-dev vuex@3.6.0
 ```
 
 参考：

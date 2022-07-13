@@ -21,6 +21,7 @@
 </template>
 <script>
 export default {
+  components: {},
   data() {
     return {
       isOpen: false,
@@ -64,9 +65,9 @@ export default {
 }
 .header-content {
   width: max-content;
-
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .bounce-enter-active {

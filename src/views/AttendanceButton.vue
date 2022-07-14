@@ -63,14 +63,37 @@ export default {
     },
     submitAttendanceDateTime: function () {
       const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
-      console.log(new Date().toLocaleDateString());
-      console.log(new Date().toLocaleTimeString());
+      // console.log(new Date().toLocaleDateString());
+      // console.log(new Date().toLocaleTimeString());
 
       const params = new URLSearchParams();
       params.append("isAttend", true);
       params.append("achievedAttendanceDate", new Date().toLocaleDateString()); // 渡したいデータ分だけappendする
       params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
       params.append("userId", "001");
+      console.log(this.$store.getters.getAttendanceInfo);
+      // let attendanceInfo = {
+      //   achievedAttendanceDate:
+      //     this.$store.getters.getAttendanceInfo.achievedAttendanceDate,
+      //   achievedAttendanceTime:
+      //     this.$store.getters.getAttendanceInfo.achievedAttendanceTime,
+      //   achievedLeavingDate:
+      //     this.$store.getters.getAttendanceInfo.achievedAttendanceTime,
+      //   achievedLeavingTime:
+      //     this.$store.getters.getAttendanceInfo.achievedLeavingTime,
+      //   scheduledAttendanceDate:
+      //     this.$store.getters.getAttendanceInfo.scheduledAttendanceDate,
+      //   scheduledAttendanceTime:
+      //     this.$store.getters.getAttendanceInfo.scheduledAttendanceTime,
+      //   scheduledLeavingDate:
+      //     this.$store.getters.getAttendanceInfo.scheduledLeavingDate,
+      //   scheduledLeavingTime:
+      //     this.$store.getters.getAttendanceInfo.scheduledLeavingTime,
+      // };
+      params.append(
+        "attendanceInfo",
+        JSON.stringify(this.$store.getters.getAttendanceInfo)
+      );
       this.axios
         .post(url, params, this.serverPass + "login")
         .then((response) => {

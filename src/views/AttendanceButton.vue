@@ -52,6 +52,8 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.$store.commit("setAttendanceInfo", response.data);
+        this.scheduledAttendanceTime = response.data.scheduledAttendanceTime;
+        this.scheduledLeavingTime = response.data.scheduledLeavingTime;
       })
       .catch((error) => {
         console.log(error);
@@ -72,24 +74,6 @@ export default {
       params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
       params.append("userId", "001");
       console.log(this.$store.getters.getAttendanceInfo);
-      // let attendanceInfo = {
-      //   achievedAttendanceDate:
-      //     this.$store.getters.getAttendanceInfo.achievedAttendanceDate,
-      //   achievedAttendanceTime:
-      //     this.$store.getters.getAttendanceInfo.achievedAttendanceTime,
-      //   achievedLeavingDate:
-      //     this.$store.getters.getAttendanceInfo.achievedAttendanceTime,
-      //   achievedLeavingTime:
-      //     this.$store.getters.getAttendanceInfo.achievedLeavingTime,
-      //   scheduledAttendanceDate:
-      //     this.$store.getters.getAttendanceInfo.scheduledAttendanceDate,
-      //   scheduledAttendanceTime:
-      //     this.$store.getters.getAttendanceInfo.scheduledAttendanceTime,
-      //   scheduledLeavingDate:
-      //     this.$store.getters.getAttendanceInfo.scheduledLeavingDate,
-      //   scheduledLeavingTime:
-      //     this.$store.getters.getAttendanceInfo.scheduledLeavingTime,
-      // };
       params.append(
         "attendanceInfo",
         JSON.stringify(this.$store.getters.getAttendanceInfo)
@@ -97,7 +81,10 @@ export default {
       this.axios
         .post(url, params, this.serverPass + "login")
         .then((response) => {
-          console.log(response);
+          console.log(response.status);
+          if (response.status == 204) {
+            window.alert("出勤しました。");
+          }
         })
         .catch((error) => {
           window.alert("投稿できませんでした。");

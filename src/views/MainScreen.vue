@@ -8,7 +8,10 @@
       <router-link to="/changeByCase">changeByCase</router-link>
     </div>
     <div class="content">
-      <router-link to="/attendance" @click="show">勤怠ボタン</router-link>
+      <router-link to="/attendance">勤怠ボタン</router-link>
+    </div>
+    <div class="content">
+      <router-link to="/attendanceInfoEdit">勤怠管理ページ</router-link>
     </div>
   </div>
 </template>
@@ -19,11 +22,7 @@ export default {
   components: {
     MyHeader,
   },
-  methods: {
-    show: function () {
-      console.log(this.$store.getters.getAttendanceInfo);
-    },
-  },
+  methods: {},
 };
 </script>
 

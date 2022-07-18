@@ -4,6 +4,7 @@ import MainScreen from '../views/MainScreen.vue'
 import HomePage from '../views/HomePage.vue'
 import ChangeByCase from '../views/ChangeByCase.vue'
 import Attendance from '../views/AttendanceButton.vue';
+import AttendanceInfoEdit from "../views/AttendanceInfoEdit.vue";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/attendance',
     name: 'Attendance',
     component: Attendance
+  },
+  {
+    path: '/attendanceInfoEdit',
+    name: 'AttendanceInfoEdit',
+    component: AttendanceInfoEdit
   }
 ]
 

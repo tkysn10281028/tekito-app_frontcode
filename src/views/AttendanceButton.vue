@@ -1,23 +1,21 @@
 <template>
   <div id="attendance-button">
-    <MyInputPopUp :displayName="popUpName"></MyInputPopUp>
+    <MyInputPopUp
+      :displayName="popUpName"
+      :popUpText="popUpText"
+    ></MyInputPopUp>
     <MyHeader></MyHeader>
     <h1 class="title">勤怠を入力してください</h1>
     <div class="clock">
       <MyHeaderTime></MyHeaderTime>
     </div>
-    <div class="event">
-      <p @click="show">イベント</p>
-    </div>
     <div class="text-content">
-      <p class="text-content-label">＜出勤予定時刻＞</p>
-      <p>
-        {{ scheduledAttendanceTime }}
-      </p>
-      <p class="text-content-label">＜退勤予定時刻＞</p>
-      <p>
-        {{ scheduledLeavingTime }}
-      </p>
+      <p class="text-content-label">＜出勤＞</p>
+      <p>予定：{{ scheduledAttendanceTime }}</p>
+      <p>実績：{{ achievedAttendanceTime }}</p>
+      <p class="text-content-label">＜退勤＞</p>
+      <p>予定：{{ scheduledLeavingTime }}</p>
+      <p>実績 ：{{ achievedLeavingTime }}</p>
     </div>
     <div class="button-contents">
       <button class="button" @click="submitAttendanceDateTime">出勤</button>
@@ -39,59 +37,114 @@ export default {
     return {
       scheduledAttendanceTime: "投稿なし",
       scheduledLeavingTime: "投稿なし",
+      achievedAttendanceTime: "投稿なし",
+      achievedLeavingTime: "投稿なし",
       popUpName: "attendanceButton",
+      popUpText: "投稿できませんでした.",
     };
   },
   created: function () {
-    const url = "http://localhost:8080/api/v1/getAttendanceInfo";
-    const params = new URLSearchParams();
-    params.append("date", new Date().toLocaleDateString()); // 渡したいデータ分だけappendする
-    params.append("userId", "001");
-    this.axios
-      .post(url, params, this.serverPass + "login")
-      .then((response) => {
-        console.log(response.data);
-        this.$store.commit("setAttendanceInfo", response.data);
-        this.scheduledAttendanceTime = response.data.scheduledAttendanceTime;
-        this.scheduledLeavingTime = response.data.scheduledLeavingTime;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.getAttendanceInfo();
   },
   methods: {
     show: function () {
       this.$modal.show(this.popUpName);
     },
+    getAttendanceInfo: function () {
+      // const url = "http://localhost:8080/api/v1/getAttendanceInfo";
+      const url = "http://www.tekito-app.com/api/v1/getAttendanceInfo";
+
+      const params = new URLSearchParams();
+      params.append("date", new Date().toLocaleDateString());
+      params.append("userId", "001");
+      this.axios
+        .post(url, params, this.serverPass + "login")
+        .then((response) => {
+          this.$store.commit("setAttendanceInfo", response.data);
+          this.scheduledAttendanceTime = response.data.scheduledAttendanceTime;
+          this.scheduledLeavingTime = response.data.scheduledLeavingTime;
+          this.achievedAttendanceTime = response.data.achievedAttendanceTime;
+          this.achievedLeavingTime = response.data.achievedLeavingTime;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit("setAttendanceInfo", null);
+        });
+    },
     submitAttendanceDateTime: function () {
-      const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
-      // console.log(new Date().toLocaleDateString());
-      // console.log(new Date().toLocaleTimeString());
+      let attendanceInfo = this.$store.getters.getAttendanceInfo;
+      if (attendanceInfo == null) {
+        this.popUpText = "投稿できませんでした。";
+        this.show();
+        return;
+      }
+      if (attendanceInfo.attendFlg) {
+        this.popUpText = "出勤済みのため登録できませんでした。";
+        this.show();
+        return;
+      }
+      // const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
+      const url = "http://www.tekito-app.com/api/v1/postAchievedAttendanceInfo";
 
       const params = new URLSearchParams();
       params.append("isAttend", true);
-      params.append("achievedAttendanceDate", new Date().toLocaleDateString()); // 渡したいデータ分だけappendする
+      params.append("achievedAttendanceDate", new Date().toLocaleDateString());
       params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
       params.append("userId", "001");
-      console.log(this.$store.getters.getAttendanceInfo);
-      params.append(
-        "attendanceInfo",
-        JSON.stringify(this.$store.getters.getAttendanceInfo)
-      );
+      params.append("attendanceInfo", JSON.stringify(attendanceInfo));
       this.axios
         .post(url, params, this.serverPass + "login")
         .then((response) => {
           console.log(response.status);
           if (response.status == 204) {
-            window.alert("出勤しました。");
+            this.popUpText = "出勤しました。";
+            this.getAttendanceInfo();
+            this.show();
           }
         })
         .catch((error) => {
-          window.alert("投稿できませんでした。");
+          this.popUpText = "投稿できませんでした。";
           console.log(error);
+          this.show();
         });
     },
-    submitLeavingDateTime: function () {},
+    submitLeavingDateTime: function () {
+      let attendanceInfo = this.$store.getters.getAttendanceInfo;
+      if (attendanceInfo == null) {
+        this.popUpText = "投稿できませんでした。";
+        this.show();
+        return;
+      }
+      if (attendanceInfo.leaveFlg) {
+        this.popUpText = "退勤済みのため登録できませんでした。";
+        this.show();
+        return;
+      }
+      // const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
+      const url = "http://www.tekito-app.com/api/v1/postAchievedAttendanceInfo";
+
+      const params = new URLSearchParams();
+      params.append("isAttend", false);
+      params.append("achievedAttendanceDate", new Date().toLocaleDateString()); // 渡したいデータ分だけappendする
+      params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
+      params.append("userId", "001");
+      params.append("attendanceInfo", JSON.stringify(attendanceInfo));
+      this.axios
+        .post(url, params, this.serverPass + "login")
+        .then((response) => {
+          console.log(response.status);
+          if (response.status == 204) {
+            this.popUpText = "退勤しました。";
+            this.getAttendanceInfo();
+            this.show();
+          }
+        })
+        .catch((error) => {
+          this.popUpText = "投稿できませんでした。";
+          console.log(error);
+          this.show();
+        });
+    },
   },
 };
 </script>

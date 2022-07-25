@@ -18,11 +18,15 @@
 
 <script>
 import MyHeader from "../organisms/HeaderView.vue";
+import constFunc from "../constFunc.js";
 export default {
   components: {
     MyHeader,
   },
   methods: {},
+  created: function () {
+    constFunc.WhoAmI();
+  },
 };
 </script>
 

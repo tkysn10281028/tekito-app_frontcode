@@ -21,6 +21,7 @@
 import MyHeader from "../organisms/HeaderView.vue";
 import MyInputDate from "../atoms/inputDate.vue";
 import MyInputPopUp from "../organisms/inputDatePopUp.vue";
+import constFunc from "../constFunc.js";
 export default {
   components: {
     MyHeader,
@@ -38,6 +39,7 @@ export default {
     };
   },
   created: function () {
+    constFunc.WhoAmI();
     this.getInfoList();
   },
   methods: {
@@ -45,31 +47,43 @@ export default {
       this.$modal.show(this.popUpName);
     },
     getInfoList: function () {
+      const url = location.origin + "/api/v1/getAttendanceInfoList";
+      const params = new URLSearchParams();
+      params.append("userId", this.$store.getters.getUserId);
       this.axios
-        .get("/api/v1/getAttendanceInfoList")
+        .post(url, params, {
+          headers: {
+            Authorization: sessionStorage.getItem("jwtToken"),
+          },
+        })
         .then((response) => {
           this.$store.commit("setAttendanceInfoList", response.data);
         })
         .catch((error) => {
           console.log(error);
-          this.$store.commit("setAttendanceInfoList", null);
         });
     },
     changeScheduledTime: function (value) {
       if (this.nowDate == "") {
         return;
       }
-      // const url = "http://localhost:8080/api/v1/postScheduledAttendanceInfo";
-      const url =
-        "http://www.tekito-app.com/api/v1/postScheduledAttendanceInfo";
-
+      const url = location.origin + "/api/v1/postScheduledAttendanceInfo";
       const params = new URLSearchParams();
       params.append("date", this.nowDate);
       params.append("achievedAttendanceTime", value.attendanceTime);
       params.append("achievedLeavingTime", value.LeavingTime);
-      params.append("userId", "001");
+      params.append("userId", this.$store.getters.getUserId);
       this.axios
-        .post(url, params, this.serverPass + "login")
+        .post(
+          url,
+          params,
+          {
+            headers: {
+              Authorization: sessionStorage.getItem("jwtToken"),
+            },
+          },
+          this.serverPass + "login"
+        )
         .then(() => {
           this.getInfoList();
           this.scheduledAttendanceTime = value.attendanceTime;
@@ -90,9 +104,6 @@ export default {
       let result = attendanceInfoList.filter(
         (info) => info.scheduledAttendanceDate == value
       );
-      console.log(attendanceInfoList);
-      console.log(result);
-      console.log(result[0]);
       if (result[0]) {
         this.scheduledAttendanceTime = result[0].scheduledAttendanceTime;
         this.achievedAttendanceTime = result[0].achievedAttendanceTime;

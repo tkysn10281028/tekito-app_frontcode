@@ -5,6 +5,7 @@ import HomePage from '../views/HomePage.vue'
 import ChangeByCase from '../views/ChangeByCase.vue'
 import Attendance from '../views/AttendanceButton.vue';
 import AttendanceInfoEdit from "../views/AttendanceInfoEdit.vue";
+import LoginView from "../views/LoginView.vue";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/attendanceInfoEdit',
     name: 'AttendanceInfoEdit',
     component: AttendanceInfoEdit
+  },
+  {
+    path:'/login',
+    name:'LoginView',
+    component:LoginView
   }
 ]
 

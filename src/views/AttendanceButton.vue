@@ -27,6 +27,7 @@
 import MyHeader from "../organisms/HeaderView.vue";
 import MyHeaderTime from "../atoms/HeaderTime.vue";
 import MyInputPopUp from "../atoms/inputPopup.vue";
+import constFunc from "../constFunc.js";
 export default {
   components: {
     MyHeader,
@@ -44,6 +45,7 @@ export default {
     };
   },
   created: function () {
+    constFunc.WhoAmI();
     this.getAttendanceInfo();
   },
   methods: {
@@ -51,14 +53,21 @@ export default {
       this.$modal.show(this.popUpName);
     },
     getAttendanceInfo: function () {
-      // const url = "http://localhost:8080/api/v1/getAttendanceInfo";
-      const url = "http://www.tekito-app.com/api/v1/getAttendanceInfo";
-
+      const url = location.origin + "/api/v1/getAttendanceInfo";
       const params = new URLSearchParams();
       params.append("date", new Date().toLocaleDateString());
-      params.append("userId", "001");
+      params.append("userId", this.$store.getters.getUserId);
       this.axios
-        .post(url, params, this.serverPass + "login")
+        .post(
+          url,
+          params,
+          {
+            headers: {
+              Authorization: sessionStorage.getItem("jwtToken"),
+            },
+          },
+          this.serverPass + "login"
+        )
         .then((response) => {
           this.$store.commit("setAttendanceInfo", response.data);
           this.scheduledAttendanceTime = response.data.scheduledAttendanceTime;
@@ -83,19 +92,25 @@ export default {
         this.show();
         return;
       }
-      // const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
-      const url = "http://www.tekito-app.com/api/v1/postAchievedAttendanceInfo";
-
+      const url = location.origin + "/api/v1/postAchievedAttendanceInfo";
       const params = new URLSearchParams();
       params.append("isAttend", true);
       params.append("achievedAttendanceDate", new Date().toLocaleDateString());
       params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
-      params.append("userId", "001");
+      params.append("userId", this.$store.getters.getUserId);
       params.append("attendanceInfo", JSON.stringify(attendanceInfo));
       this.axios
-        .post(url, params, this.serverPass + "login")
+        .post(
+          url,
+          params,
+          {
+            headers: {
+              Authorization: sessionStorage.getItem("jwtToken"),
+            },
+          },
+          this.serverPass + "login"
+        )
         .then((response) => {
-          console.log(response.status);
           if (response.status == 204) {
             this.popUpText = "出勤しました。";
             this.getAttendanceInfo();
@@ -120,19 +135,25 @@ export default {
         this.show();
         return;
       }
-      // const url = "http://localhost:8080/api/v1/postAchievedAttendanceInfo";
-      const url = "http://www.tekito-app.com/api/v1/postAchievedAttendanceInfo";
-
+      const url = location.origin + "/api/v1/postAchievedAttendanceInfo";
       const params = new URLSearchParams();
       params.append("isAttend", false);
       params.append("achievedAttendanceDate", new Date().toLocaleDateString()); // 渡したいデータ分だけappendする
       params.append("achievedAttendanceTime", new Date().toLocaleTimeString());
-      params.append("userId", "001");
+      params.append("userId", this.$store.getters.getUserId);
       params.append("attendanceInfo", JSON.stringify(attendanceInfo));
       this.axios
-        .post(url, params, this.serverPass + "login")
+        .post(
+          url,
+          params,
+          {
+            headers: {
+              Authorization: sessionStorage.getItem("jwtToken"),
+            },
+          },
+          this.serverPass + "login"
+        )
         .then((response) => {
-          console.log(response.status);
           if (response.status == 204) {
             this.popUpText = "退勤しました。";
             this.getAttendanceInfo();

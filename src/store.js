@@ -6,7 +6,8 @@ Vue.use(Vuex);
 function getDefaultState() {
     return {
       attendanceInfo:null,
-      attendanceInfoList:null
+      attendanceInfoList:null,
+      userId:null
     };
   }
 
@@ -14,7 +15,7 @@ const store = new Vuex.Store({
     plugins: [
         vuexPersistedState({
           key: "tekito-app",
-          paths: ["attendanceInfo","attendanceInfoList"],
+          paths: ["attendanceInfo","attendanceInfoList","userId"],
           storage: window.sessionStorage,
         }),
       ],
@@ -26,6 +27,9 @@ const store = new Vuex.Store({
     getAttendanceInfoList(state) {
         return state.attendanceInfoList;
     },
+    getUserId(state){
+      return state.userId;
+    }
   },
   mutations: {
     setAttendanceInfo(state, val) {
@@ -34,7 +38,12 @@ const store = new Vuex.Store({
     setAttendanceInfoList(state, val) {
         state.attendanceInfoList = val;
     },
-      
+    setUserId(state,val){
+      state.userId = val;
+    },
+    clearState(state){
+      Object.assign(state,getDefaultState())
+    }
   },
 });
 export default store;

@@ -7,7 +7,7 @@
     ></div>
     <transition name="bounce">
       <div class="header" v-if="isOpen" @click="isOpen = !isOpen">
-        <p class="header-content" @click="goToChangeByCase">
+        <p class="header-content" @click="Logout">
           <img src="../assets/left.png" />
           ログアウト
         </p>
@@ -33,9 +33,11 @@ export default {
         this.$router.push("/main");
       }
     },
-    goToChangeByCase: function () {
-      if (this.$route.path !== "/changeByCase") {
-        this.$router.push("/changeByCase");
+    Logout: function () {
+      this.$store.commit("clearState");
+      sessionStorage.removeItem("jwtToken");
+      if (this.$route.path !== "/login") {
+        this.$router.push("/login");
       }
     },
   },

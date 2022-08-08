@@ -6,6 +6,7 @@ import ChangeByCase from '../views/ChangeByCase.vue'
 import Attendance from '../views/AttendanceButton.vue';
 import AttendanceInfoEdit from "../views/AttendanceInfoEdit.vue";
 import LoginView from "../views/LoginView.vue";
+import UploadFileView from "../views/UploadFileView.vue";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path:'/login',
     name:'LoginView',
     component:LoginView
+  },
+  {
+    path:'/uploadFile',
+    name:'UploadFileView',
+    component:UploadFileView
   }
 ]
 

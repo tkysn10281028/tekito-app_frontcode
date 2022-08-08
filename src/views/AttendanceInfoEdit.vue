@@ -95,6 +95,7 @@ export default {
       this.getAttedanceInfoByDate(this.nowDate);
     },
     getAttedanceInfoByDate: function (value) {
+      console.log(value);
       this.nowDate = value;
       let attendanceInfoList = this.$store.getters.getAttendanceInfoList;
 

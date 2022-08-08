@@ -13,6 +13,9 @@
     <div class="content">
       <router-link to="/attendanceInfoEdit">勤怠管理ページ</router-link>
     </div>
+    <div class="content">
+      <router-link to="/uploadFile">成果物成果物アップロードページ</router-link>
+    </div>
   </div>
 </template>
 
